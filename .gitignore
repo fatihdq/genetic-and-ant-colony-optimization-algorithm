@@ -1,6 +1,12 @@
 *.pdf
-*.txt
 *.png
 
+
 virtualEnv
-imageResult
+tcImages
+
+logs
+images
+
+__pycache__
+.DS_Store
