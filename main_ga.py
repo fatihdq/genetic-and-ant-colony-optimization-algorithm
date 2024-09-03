@@ -4,7 +4,7 @@ import time
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from algorithm.geneticAlgorithm import geneticAlgorithm
+from algorithm.ga import geneticAlgorithm
 from base.city import City
 
 logFile = './logs/ga_result.txt'

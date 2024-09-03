@@ -7,9 +7,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from base.city import City
-from algorithm.geneticAlgorithm import geneticAlgorithm
-from algorithm.gaAcoAlgorithm import gaAcoAlgorithm
-from algorithm.antColonyOptimization import antColonyOptimization
+from algorithm.ga import geneticAlgorithm
+from algorithm.gaAco import gaAcoAlgorithm
+from algorithm.aco import antColonyOptimization
 
 logFile = './logs/testcase_log.txt'
 testcaseFile = 'testcase.xlsx'

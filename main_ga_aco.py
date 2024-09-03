@@ -5,8 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from base.city import City
-from algorithm.geneticAlgorithm import geneticAlgorithm
-from algorithm.gaAcoAlgorithm import gaAcoAlgorithm
+from algorithm.ga import geneticAlgorithm
+from algorithm.gaAco import gaAcoAlgorithm
 
 logFile = './logs/ga_aco_result.txt'
 gaImgaeFile = './images/ga_result.png'

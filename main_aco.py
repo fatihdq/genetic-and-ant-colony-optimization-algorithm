@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from algorithm.antColonyOptimization import antColonyOptimization
+from algorithm.aco import antColonyOptimization
 
 logFile = './logs/aco_result.txt'
 imageFile = './images/aco_result.png'
