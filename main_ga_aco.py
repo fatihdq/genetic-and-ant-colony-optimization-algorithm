@@ -4,7 +4,7 @@ import sys
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from algorithm.city import City
+from base.city import City
 from algorithm.geneticAlgorithm import geneticAlgorithm
 from algorithm.gaAcoAlgorithm import gaAcoAlgorithm
 

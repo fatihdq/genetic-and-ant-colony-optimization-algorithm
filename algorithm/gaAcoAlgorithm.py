@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt 
 
-from algorithm.city import City
-from algorithm.route import Route
+from base.city import City
+from base.route import Route
 
 def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, routes, DEBUG=False):
     cityList = []

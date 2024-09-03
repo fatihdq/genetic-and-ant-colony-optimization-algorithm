@@ -1,6 +1,6 @@
 import random
 
-from algorithm.route import Route
+from base.route import Route
 
 def createRoute(cityList):
     #Randomize city based on city in dataset to assign into route

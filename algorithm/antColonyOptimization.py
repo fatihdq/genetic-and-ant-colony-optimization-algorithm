@@ -1,6 +1,6 @@
 import numpy as np
 
-from algorithm.city import City
+from base.city import City
     
 def antColonyOptimization(city, iteration, nAnts, rho, alpha, beta, initialPheromne, DEBUG=False):
     cityList = []
