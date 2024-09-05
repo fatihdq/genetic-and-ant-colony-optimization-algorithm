@@ -11,11 +11,11 @@ class Logger(object):
     def printToTerminal(self, message=""):
         sys.stdout.write(message + '\n')
 
-    def progressBar(self, iteration, total, idx, testcase, test, length=50):
+    def progressBar(self, iteration, total, idx, dataset, test, length=50):
         percent = 100 * (iteration / float(total))
         filled_length = int(length * iteration // total)
         bar = '█' * filled_length + '-' * (length - filled_length)
-        sys.stdout.write(f'\r Dataset: {testcase.loc[idx, 'Dataset']}, Percobaan {test} |{bar}| ({idx+1}/{int((total-1)/3)} testcase) {percent:.2f}% Complete')
+        sys.stdout.write(f'\rTestcase: {idx+1}, Dataset: {dataset}, Percobaan: {test} |{bar}| {percent:.2f}% Complete')
 
         sys.stdout.flush()
     

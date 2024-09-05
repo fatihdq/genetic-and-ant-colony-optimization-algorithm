@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
         
         for testIdx in range(1, 4):
-            log.progressBar((idx*3)+testIdx, (len(testcase)*3)+1, idx, testcase, testIdx)
+            log.progressBar((idx*3)+testIdx, (len(testcase)*3), idx, dataset, testIdx)
 
             GAImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_'+str(generation)+'.png'
             ACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_ACO_'+str(generation)+'.png'
