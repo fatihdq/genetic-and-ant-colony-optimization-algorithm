@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from base.city import City
+from base.logger import Logger
 from algorithmV2.ga import geneticAlgorithm
 from algorithmV2.gaAco import gaAcoAlgorithm
 
@@ -25,13 +26,14 @@ if os.path.exists(gaImgaeFile):
 if os.path.exists(gaAcoImgaeFile):
     os.remove(gaAcoImgaeFile)
 
+log = Logger(logFile)
 DEBUG = False # if DEBUG is true to print all result. Default DEBUG is false for print final result only
 datasetPath = "./dataset/lin318.csv"
 # Algen Parameters
 populationSize = 5
-gaGenCriteria = 10
+gaGenCriteria = 30
 # ACO Parameters
-acoGenCriteria = 15
+acoGenCriteria = 30
 nAnts = 5
 rho = 0.5
 alpha = 1
@@ -51,11 +53,11 @@ if __name__ == '__main__':
         cityList.append(City(name = city.iloc[i,0],x=city.iloc[i][1],y=city.iloc[i][2]))
 
     # Start Genetic Algorithm process
-    print("\n====================================== Genetica Algorithm ======================================\n")
-    print(f"Population Size: {str(populationSize)}")
-    print(f"Generation Criteria: {str(gaGenCriteria)}")
-    print()
-    gaResult, gaDistance, gaProgress, gaNGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=gaGenCriteria, DEBUG=DEBUG)
+    log.printToLog("\n====================================== Genetica Algorithm ======================================\n")
+    log.printToLog(f"Population Size: {str(populationSize)}")
+    log.printToLog(f"Generation Criteria: {str(gaGenCriteria)}")
+    log.printToLog()
+    gaResult, gaDistance, gaProgress, gaNGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=gaGenCriteria, log=log, DEBUG=DEBUG)
     
     # Visualize the genetic algorithm result
     plt.figure(0)
@@ -79,16 +81,16 @@ if __name__ == '__main__':
         newPop.append(newRoute)
 
     # Start Ant Colony Optimization Algorithm process
-    print("\n\n====================================== Ant Colony Optimization ======================================\n")
-    print(f"Generation Criteria: {str(acoGenCriteria)}")
-    print(f"Ants: {str(nAnts)}")
-    print(f"Rho: {str(rho)}")
-    print(f"Alpha: {str(alpha)}")
-    print(f"Beta: {str(beta)}")
-    print(f"Initial Pheromne : {str(initialPheromne)}")
-    print()
+    log.printToLog("\n\n====================================== Ant Colony Optimization ======================================\n")
+    log.printToLog(f"Generation Criteria: {str(acoGenCriteria)}")
+    log.printToLog(f"Ants: {str(nAnts)}")
+    log.printToLog(f"Rho: {str(rho)}")
+    log.printToLog(f"Alpha: {str(alpha)}")
+    log.printToLog(f"Beta: {str(beta)}")
+    log.printToLog(f"Initial Pheromne : {str(initialPheromne)}")
+    log.printToLog()
 
-    acoDistance, acoProgress, acoNGeneration = gaAcoAlgorithm(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, DEBUG=DEBUG)
+    acoDistance, acoProgress, acoNGeneration = gaAcoAlgorithm(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, log=log, DEBUG=DEBUG)
     
     # Ploting ACO Result
     plt.figure(1)
@@ -101,9 +103,9 @@ if __name__ == '__main__':
     aco_time = time.time() - end_algen_time
     executionTime = time.time() - start_time
 
-    print("GENETIC ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = algo_time/3600, minutes = algo_time/60, seconds = algo_time))
-    print("ACO ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = aco_time/3600, minutes = aco_time/60, seconds = aco_time))
-    print("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
+    log.printToLog("GENETIC ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = algo_time/3600, minutes = algo_time/60, seconds = algo_time))
+    log.printToLog("ACO ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = aco_time/3600, minutes = aco_time/60, seconds = aco_time))
+    log.printToLog("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
 
     sys.stdout = origin_stdout
     f.close()

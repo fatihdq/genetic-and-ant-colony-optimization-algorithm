@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from base.city import City
+from base.logger import Logger
 from algorithmV2.ga import geneticAlgorithm
 from algorithmV2.gaAco import gaAcoAlgorithm
 from algorithmV2.aco import antColonyOptimization
@@ -26,6 +27,8 @@ else:
     os.mkdir('tcImages')
 if os.path.exists(testcaseResultFile):
     os.remove(testcaseResultFile)
+
+log = Logger(logFile)
 
 DEBUG = False # if DEBUG is true to print all result. Default DEBUG is false for print final result only
 
@@ -49,14 +52,7 @@ testcase['Image GA-ACO All Percobaan 1'] = testcase['Image GA-ACO All Percobaan 
 testcase['Image GA-ACO All Percobaan 2'] = testcase['Image GA-ACO All Percobaan 2'].astype(str)
 testcase['Image GA-ACO All Percobaan 3'] = testcase['Image GA-ACO All Percobaan 3'].astype(str)
 
-
-
-
 if __name__ == '__main__':
-    origin_stdout = sys.stdout
-    f = open(logFile, 'w')
-    sys.stdout = f
-
     for idx in range(0,len(testcase)):
         dataset = testcase.loc[idx,"Dataset"]
 
@@ -79,7 +75,8 @@ if __name__ == '__main__':
 
         
         for testIdx in range(1, 4):
-            ## Test 1
+            log.progressBar((idx*3)+testIdx, (len(testcase)*3)+1, idx, testcase, testIdx)
+ 
             GAImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_'+str(gaGenCriteria)+'.png'
             ACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_ACO_'+str(gaGenCriteria)+'.png'
             GAACOACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(ACO)_'+str(gaGenCriteria)+'.png'
@@ -89,11 +86,11 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Genetic Algorithm process
-            print("\n====================================== Genetica Algorithm ======================================\n")
-            print(f"Population Size: {str(populationSize)}")
-            print(f"Generation Criteria: {str(gaGenCriteria)}")
-            print()
-            gaResult, gaDistance, gaProgress, gaNGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=gaGenCriteria, DEBUG=DEBUG)
+            log.printToLog("\n====================================== Genetica Algorithm ======================================\n")
+            log.printToLog(f"Population Size: {str(populationSize)}")
+            log.printToLog(f"Generation Criteria: {str(gaGenCriteria)}")
+            log.printToLog()
+            gaResult, gaDistance, gaProgress, gaNGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=gaGenCriteria, log=log, DEBUG=DEBUG)
 
             end_ga_time = time.time()
             ga_time = end_ga_time - start_time
@@ -120,7 +117,7 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Ant Colony Optimization Algorithm process
-            acoDistance, acoProgress, acoNGeneration = antColonyOptimization(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, DEBUG=DEBUG)
+            acoDistance, acoProgress, acoNGeneration = antColonyOptimization(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, log=log, DEBUG=DEBUG)
             acoProgress = [item[0] for item in acoProgress]
             aco_time = time.time() - start_time
 
@@ -136,7 +133,7 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Genetic Algorithm & Ant Colony Optimization Algorithm process
-            gaAcoDistance, gaAcoProgress, gaAcoNGeneration = gaAcoAlgorithm(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, DEBUG=DEBUG)
+            gaAcoDistance, gaAcoProgress, gaAcoNGeneration = gaAcoAlgorithm(city=city, genCriteria=acoGenCriteria, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, log=log, DEBUG=DEBUG)
             gaAcoProgress = [item[0] for item in gaAcoProgress]
             ga_aco_time = time.time() - start_time
 
@@ -254,6 +251,4 @@ if __name__ == '__main__':
         testcase.loc[idx, "Standar Deviasi Generasi ACO"] = stdGenerationACO
         testcase.loc[idx, "Standar Deviasi Generasi GA-ACO"] = stdGenerationGAACO
 
-    sys.stdout = origin_stdout
-    f.close()
     testcase.to_excel(testcaseResultFile, index=False)

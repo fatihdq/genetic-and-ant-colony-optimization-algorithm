@@ -2,7 +2,7 @@ import numpy as np
 
 from base.city import City
     
-def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPheromne, DEBUG=False):
+def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPheromne, log, DEBUG=False):
     cityList = []
     for i in range(0, len(city)):
         cityList.append(City(name = city.iloc[i,0],x=city.iloc[i][1],y=city.iloc[i][2]))
@@ -12,17 +12,17 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
 
     # Initialization Pheromne
     pheromne = initialPheromne * np.ones((len(cityList), len(cityList)))
-    print("Initial Pheromne")
-    print("--------------------------------")
-    print("Initail City | Destination City | New Pheromne")
+    log.printToLog("Initial Pheromne")
+    log.printToLog("--------------------------------")
+    log.printToLog("Initail City | Destination City | New Pheromne")
     for row in range(len(cityList)):
         for col in range (len(cityList)):
             distance = cityList[row].distance(cityList[col])
             distances[row, col] = distance
             visibility[row, col] = 1/distance  if distance != 0 else 0
             if col > row:
-                print(f"{row + 1}             | {col + 1}               | {pheromne[row, col]:.4f}")
-    print("------------------------------------------\n")
+                log.printToLog(f"{row + 1}             | {col + 1}               | {pheromne[row, col]:.4f}")
+    log.printToLog("------------------------------------------\n")
 
 
     routes = np.ones((nAnts, len(cityList)+1), dtype=int)
@@ -36,7 +36,7 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
     idx = 0
     while looping:
         if DEBUG or idx == 0:
-            print(f"=========================== Iteration {idx+1} ============================")
+            log.printToLog(f"=========================== Iteration {idx+1} ============================")
         antAndDistanceStr = ""
     
         # Randomize the first city each ants
@@ -60,12 +60,12 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
                 probabilities = features/total
                 
                 if DEBUG:
-                    print(f"Ant {i + 1}: {routes[i, :]}")
-                    print("---------------------")
-                    print("City  | Probability |")
+                    log.printToLog(f"Ant {i + 1}: {routes[i, :]}")
+                    log.printToLog("---------------------")
+                    log.printToLog("City  | Probability |")
                     for k in range(len(cityList)):
-                        print(f"{k + 1}     | {probabilities[k]:.4f}       |")
-                    print("---------------------")
+                        log.printToLog(f"{k + 1}     | {probabilities[k]:.4f}       |")
+                    log.printToLog("---------------------")
 
                 # Choose next city with highest probability
                 nextCityIdx = np.argmax(probabilities)
@@ -75,7 +75,7 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
 
             routes[i, -1] = routes[i, 0] # Back to first City
             if DEBUG:
-                print(f"Ant {i + 1}: {routes[i, :]}")
+                log.printToLog(f"Ant {i + 1}: {routes[i, :]}")
 
             # Calculate last city to first city
             distance += distances[int(routes[i, -2]) - 1, int(routes[i, -1]) - 1]
@@ -83,11 +83,11 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
             antAndDistanceStr += f"Ant {i+1}: {'-'.join(map(str, map(int, routes[i, :])))} | Distance = {totalDistance[i, 0]:.4f}\n"
 
             if DEBUG:
-                print("\n====================\n")
+                log.printToLog("\n====================\n")
 
         if DEBUG:
-            print(f"Iteration {idx+1} Result: ")
-            print(antAndDistanceStr)
+            log.printToLog(f"Iteration {idx+1} Result: ")
+            log.printToLog(antAndDistanceStr)
 
 
         # Search the best routes
@@ -119,23 +119,23 @@ def antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, initialPhe
                 pheromne[int(routes[i, j + 1]) - 1, int(routes[i, j]) - 1] += delta
 
         if DEBUG == False and looping == False:
-            print(f"=========================== Iteration {idx+1} ============================")     
+            log.printToLog(f"=========================== Iteration {idx+1} ============================")     
 
         if DEBUG or looping == False or idx == 0 :
-            print("Update Pheromne")
-            print("--------------------------------")
-            print("Initail City | Destination City | New Pheromne")
+            log.printToLog("Update Pheromne")
+            log.printToLog("--------------------------------")
+            log.printToLog("Initail City | Destination City | New Pheromne")
         for i in range(len(cityList)):
             for j in range(i+1, len(cityList)):
                 pheromneValue = pheromne[i, j]
                 if DEBUG or looping == False or idx == 0:
-                    print(f"{i + 1}             | {j + 1}               | {pheromneValue:.4f}")
+                    log.printToLog(f"{i + 1}             | {j + 1}               | {pheromneValue:.4f}")
         if DEBUG or looping == False or idx == 0:
-            print("------------------------------------------\n")
+            log.printToLog("------------------------------------------\n")
         
         idx += 1
 
     nGeneration = idx
-    print(f"The best routes: {'-'.join(map(str, map(int, bestRoute)))} | Total Distance = {bestDistance[0]:.4f}")
-    print(f"total generation: {nGeneration}")
+    log.printToLog(f"The best routes: {'-'.join(map(str, map(int, bestRoute)))} | Total Distance = {bestDistance[0]:.4f}")
+    log.printToLog(f"total generation: {nGeneration}")
     return bestDistances[-1], bestDistances, nGeneration

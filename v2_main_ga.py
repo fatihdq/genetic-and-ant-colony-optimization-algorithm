@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 
 from algorithmV2.ga import geneticAlgorithm
 from base.city import City
+from base.logger import Logger
 
 logFile = './logs/ga_result.txt'
 imageFile = './images/ga_result.png'
@@ -19,6 +20,8 @@ if os.path.exists(logFile):
     os.remove(logFile)
 if os.path.exists(imageFile):
     os.remove(imageFile)
+
+log = Logger(logFile)
 
 DEBUG = False # if DEBUG is true to print all result. Default DEBUG is false for print final result only
 datasetPath = "./dataset/burma14.csv"
@@ -38,15 +41,15 @@ if __name__ == '__main__':
         cityList.append(City(name = city.iloc[i,0],x=city.iloc[i][1],y=city.iloc[i][2]))
 
     # Start Genetic Algorithm process
-    print("\n====================================== Genetica Algorithm ======================================\n")
-    print(f"Population Size: {str(populationSize)}")
-    print(f"Generation: {str(genCriteria)}")
-    print()
+    log.printToLog("\n====================================== Genetica Algorithm ======================================\n")
+    log.printToLog(f"Population Size: {str(populationSize)}")
+    log.printToLog(f"Generation: {str(genCriteria)}")
+    log.printToLog()
 
-    finalPopulation, bestDistance, progress, nGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=genCriteria, DEBUG=DEBUG)
+    finalPopulation, bestDistance, progress, nGeneration = geneticAlgorithm(population=cityList, popSize=populationSize, genCriteria=genCriteria, log=log, DEBUG=DEBUG)
 
     executionTime = time.time() - start_time
-    print("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
+    log.printToLog("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
 
     # Visualize the genetic algorithm result
     plt.figure(0)

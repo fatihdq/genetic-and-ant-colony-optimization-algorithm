@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from algorithmV2.aco import antColonyOptimization
+from base.logger import Logger
 
 logFile = './logs/aco_result.txt'
 imageFile = './images/aco_result.png'
@@ -17,6 +18,8 @@ if os.path.exists(logFile):
     os.remove(logFile)
 if os.path.exists(imageFile):
     os.remove(imageFile)
+
+log = Logger(logFile)
 
 DEBUG = False # if DEBUG is true to print all result. Default DEBUG is false for print final result only
 DatasetPath = './dataset/lin318.csv'
@@ -37,18 +40,18 @@ if __name__ == '__main__':
     city = pd.read_csv(DatasetPath, header=None , sep=' ')
 
     # Start Ant Colony Optimization Algorithm process
-    print("====================================== Ant Colony Optimization ======================================\n")
-    print(f"Generation Criteria: {str(genCriteria)}")
-    print(f"Ants: {str(nAnts)}")
-    print(f"Rho: {str(rho)}")
-    print(f"Alpha: {str(alpha)}")
-    print(f"Beta: {str(beta)}")
-    print(f"Initial Pheromne : {str(InitialPheromne)}")
-    print()
-    distance, bestDistances, nGeneration = antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, InitialPheromne, DEBUG=DEBUG)
+    log.printToLog("====================================== Ant Colony Optimization ======================================\n")
+    log.printToLog(f"Generation Criteria: {str(genCriteria)}")
+    log.printToLog(f"Ants: {str(nAnts)}")
+    log.printToLog(f"Rho: {str(rho)}")
+    log.printToLog(f"Alpha: {str(alpha)}")
+    log.printToLog(f"Beta: {str(beta)}")
+    log.printToLog(f"Initial Pheromne : {str(InitialPheromne)}")
+    log.printToLog()
+    distance, bestDistances, nGeneration = antColonyOptimization(city, genCriteria, nAnts, rho, alpha, beta, InitialPheromne, log, DEBUG=DEBUG)
 
     executionTime = time.time() - start_time
-    print("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
+    log.printToLog("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
 
     # Ploting ACO Result
     plt.figure(0)
