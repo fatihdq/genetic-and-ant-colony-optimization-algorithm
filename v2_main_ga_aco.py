@@ -41,10 +41,6 @@ beta = 1
 initialPheromne = 10
 
 if __name__ == '__main__':
-    origin_stdout = sys.stdout
-    f = open(logFile, 'w')
-    sys.stdout = f
-
     start_time = time.time()
 
     city = pd.read_csv(datasetPath, header=None , sep=' ')
@@ -106,6 +102,3 @@ if __name__ == '__main__':
     log.printToLog("GENETIC ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = algo_time/3600, minutes = algo_time/60, seconds = algo_time))
     log.printToLog("ACO ALGORITHM TIME: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = aco_time/3600, minutes = aco_time/60, seconds = aco_time))
     log.printToLog("EXECUTION TIME =: {hour:.4f} hour, {minutes:.4f} minutes, {seconds:.4f} seconds".format(hour = executionTime/3600, minutes = executionTime/60, seconds = executionTime))
-
-    sys.stdout = origin_stdout
-    f.close()

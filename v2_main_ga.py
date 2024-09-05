@@ -29,10 +29,6 @@ populationSize = 5 # Genetic Algorithm Parameters
 genCriteria = 10
 
 if __name__ == '__main__':
-    origin_stdout = sys.stdout
-    f = open(logFile, 'w')
-    sys.stdout = f
-
     start_time = time.time()
 
     city = pd.read_csv(datasetPath, header=None , sep=' ')
@@ -58,6 +54,3 @@ if __name__ == '__main__':
     plt.xlabel('Generation')
     plt.title('Genetica Algorithm Result')
     plt.savefig(imageFile)
-
-    sys.stdout = origin_stdout
-    f.close()

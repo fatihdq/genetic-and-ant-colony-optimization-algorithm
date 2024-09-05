@@ -31,10 +31,6 @@ beta = 1
 InitialPheromne = 10
 
 if __name__ == '__main__':
-    origin_stdout = sys.stdout
-    f = open(logFile, 'w')
-    sys.stdout = f
-
     start_time = time.time()
 
     city = pd.read_csv(DatasetPath, header=None , sep=' ')
@@ -60,6 +56,3 @@ if __name__ == '__main__':
     plt.ylabel('Distance')
     plt.title('Ant Colony Optimization Result')
     plt.savefig(imageFile)
-
-    sys.stdout = origin_stdout
-    f.close()
