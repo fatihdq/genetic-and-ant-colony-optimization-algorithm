@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from base.city import City
 from base.route import Route
 
-def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, routes, DEBUG=False):
+def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, routes, log, DEBUG=False):
     cityList = []
     for i in range(0, len(city)):
         cityList.append(City(name = city.iloc[i,0],x=city.iloc[i][1],y=city.iloc[i][2]))
@@ -20,7 +20,7 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
 
     # Calculate total distance in Genetica algorithm result
     totalDistance = np.zeros((len(routes), 1)) # initiate total distance
-    print(f"Genetica Algorithm Result: ")
+    log.printToLog(f"Genetica Algorithm Result: ")
     for i in range(len(routes)):
         routeStr = ""
         distance = 0
@@ -28,7 +28,7 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
             distance += routes[i][j].distance(routes[i][j+1])
             routeStr += " "+str(routes[i][j].name)
         routeStr += " "+str(routes[i][-1].name)
-        print(f"Ant {i+1}: [{routeStr}] Distance: {Route(routes[i]).routeDistance()}")
+        log.printToLog(f"Ant {i+1}: [{routeStr}] Distance: {Route(routes[i]).routeDistance()}")
         totalDistance[i] = distance
 
     # Inisialization Pheromne
@@ -41,13 +41,13 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
             pheromne[int(routes[i][j].name) - 1, int(routes[i][j+1].name) - 1] += delta
             pheromne[int(routes[i][j + 1].name) - 1, int(routes[i][j].name) - 1] += delta
 
-    print("\nInitial Pheromne")
-    print("--------------------------------")
-    print("Initail City | Destination City | Pheromne")
+    log.printToLog("\nInitial Pheromne")
+    log.printToLog("--------------------------------")
+    log.printToLog("Initail City | Destination City | Pheromne")
     for row in range(len(cityList)):
         for col in range (row+1,len(cityList)):
-            print(f"{row + 1}             | {col + 1}               | {pheromne[row, col]:.4f}")
-    print("------------------------------------------\n")
+            log.printToLog(f"{row + 1}             | {col + 1}               | {pheromne[row, col]:.4f}")
+    log.printToLog("------------------------------------------\n")
 
     bestRoute = None
     bestDistance = float('inf')
@@ -56,7 +56,7 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
     # ACO Iteration
     for idx in range(iteration):
         if (DEBUG and idx < iteration-1) or (idx == iteration-1):
-            print(f"=========================== Iteration {idx+1} ============================")
+            log.printToLog(f"=========================== Iteration {idx+1} ============================")
         antAndDistanceStr = ""
 
         routes = np.ones((nAnts, len(cityList)+1), dtype=int)
@@ -82,12 +82,12 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
                 probabilities = features/total
                 
                 if DEBUG:
-                    print(f"Ant {i + 1}: {routes[i, :]}")
-                    print("---------------------")
-                    print("City  | Probability |")
+                    log.printToLog(f"Ant {i + 1}: {routes[i, :]}")
+                    log.printToLog("---------------------")
+                    log.printToLog("City  | Probability |")
                     for k in range(len(cityList)):
-                        print(f"{k + 1}     | {probabilities[k]:.4f}       |")
-                    print("---------------------")
+                        log.printToLog(f"{k + 1}     | {probabilities[k]:.4f}       |")
+                    log.printToLog("---------------------")
 
                 # Choose next city with highest probability
                 nextCityIdx = np.argmax(probabilities)
@@ -98,18 +98,18 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
 
             routes[i, -1] = routes[i, 0] # Back to first City
             if DEBUG:
-                print(f"Ant {i + 1}: {routes[i, :]}")
+                log.printToLog(f"Ant {i + 1}: {routes[i, :]}")
 
             # Calculate last city to first city
             distance += distances[int(routes[i, -2]) - 1, int(routes[i, -1]) - 1]
             totalDistance[i] = distance
             antAndDistanceStr += f"Ant {i+1}: {'-'.join(map(str, map(int, routes[i, :])))} | Distance = {totalDistance[i, 0]:.4f}\n"
             if DEBUG:
-                print("\n====================\n")
+                log.printToLog("\n====================\n")
 
         if DEBUG:
-            print(f"Iteration {idx+1} Result: ")
-            print(antAndDistanceStr)
+            log.printToLog(f"Iteration {idx+1} Result: ")
+            log.printToLog(antAndDistanceStr)
 
 
         # Search the best routes
@@ -130,18 +130,18 @@ def gaAcoAlgorithm(city, iteration, nAnts, rho, alpha, beta, initialPheromne, ro
                 pheromne[int(routes[i, j + 1]) - 1, int(routes[i, j]) - 1] += delta
 
         if (DEBUG and idx < iteration-1) or (idx == iteration-1):
-            print("Update Pheromne")
-            print("--------------------------------")
-            print("Initail City | Destination City | New Pheromne")
+            log.printToLog("Update Pheromne")
+            log.printToLog("--------------------------------")
+            log.printToLog("Initail City | Destination City | New Pheromne")
         for i in range(len(cityList)):
             for j in range(i+1, len(cityList)):
                 pheromneValue = pheromne[i, j]
                 if (DEBUG and idx < iteration-1) or (idx == iteration-1):
-                    print(f"{i + 1}             | {j + 1}               | {pheromneValue:.4f}")
+                    log.printToLog(f"{i + 1}             | {j + 1}               | {pheromneValue:.4f}")
         if (DEBUG and idx < iteration-1) or (idx == iteration-1):
-            print("------------------------------------------\n")
+            log.printToLog("------------------------------------------\n")
 
 
-    print(f"The best routes: {'-'.join(map(str, map(int, bestRoute)))} | Total Distance = {bestDistance[0]:.4f}")
+    log.printToLog(f"The best routes: {'-'.join(map(str, map(int, bestRoute)))} | Total Distance = {bestDistance[0]:.4f}")
 
     return bestDistances[-1], bestDistances

@@ -7,6 +7,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 from base.city import City
+from base.logger import Logger
 from algorithm.ga import geneticAlgorithm
 from algorithm.gaAco import gaAcoAlgorithm
 from algorithm.aco import antColonyOptimization
@@ -27,6 +28,7 @@ else:
 if os.path.exists(testcaseResultFile):
     os.remove(testcaseResultFile)
 
+log = Logger(logFile)
 DEBUG = False # if DEBUG is true to print all result. Default DEBUG is false for print final result only
 
 testcase = pd.read_excel('testcase.xlsx')
@@ -53,10 +55,6 @@ testcase['Image GA-ACO All Percobaan 3'] = testcase['Image GA-ACO All Percobaan 
 
 
 if __name__ == '__main__':
-    origin_stdout = sys.stdout
-    f = open(logFile, 'w')
-    sys.stdout = f
-
     for idx in range(0,len(testcase)):
         dataset = testcase.loc[idx,"Dataset"]
 
@@ -79,7 +77,8 @@ if __name__ == '__main__':
 
         
         for testIdx in range(1, 4):
-            ## Test 1
+            log.progressBar((idx*3)+testIdx, (len(testcase)*3)+1, idx, testcase, testIdx)
+
             GAImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_'+str(generation)+'.png'
             ACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_ACO_'+str(generation)+'.png'
             GAACOACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(ACO)_'+str(generation)+'.png'
@@ -89,11 +88,11 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Genetic Algorithm process
-            print("\n====================================== Genetica Algorithm ======================================\n")
-            print(f"Population Size: {str(populationSize)}")
-            print(f"Generation: {str(generation)}")
-            print()
-            gaResult, gaDistance, gaProgress = geneticAlgorithm(population=cityList, popSize=populationSize, generations=generation, DEBUG=DEBUG)
+            log.printToLog("\n====================================== Genetica Algorithm ======================================\n")
+            log.printToLog(f"Population Size: {str(populationSize)}")
+            log.printToLog(f"Generation: {str(generation)}")
+            log.printToLog()
+            gaResult, gaDistance, gaProgress = geneticAlgorithm(population=cityList, popSize=populationSize, generations=generation, log=log, DEBUG=DEBUG)
 
             end_ga_time = time.time()
             ga_time = end_ga_time - start_time
@@ -120,7 +119,7 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Ant Colony Optimization Algorithm process
-            acoDistance, acoProgress = antColonyOptimization(city=city, iteration=iteration, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, DEBUG=DEBUG)
+            acoDistance, acoProgress = antColonyOptimization(city=city, iteration=iteration, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, log=log, DEBUG=DEBUG)
             acoProgress = [item[0] for item in acoProgress]
             aco_time = time.time() - start_time
 
@@ -136,7 +135,7 @@ if __name__ == '__main__':
 
             start_time = time.time()
             # Start Genetic Algorithm & Ant Colony Optimization Algorithm process
-            gaAcoDistance, gaAcoProgress = gaAcoAlgorithm(city=city, iteration=iteration, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, DEBUG=DEBUG)
+            gaAcoDistance, gaAcoProgress = gaAcoAlgorithm(city=city, iteration=iteration, nAnts=nAnts, rho=rho, alpha=alpha, beta=beta, initialPheromne=initialPheromne, routes=newPop, log=log, DEBUG=DEBUG)
             gaAcoProgress = [item[0] for item in gaAcoProgress]
             ga_aco_time = time.time() - start_time
 
@@ -234,6 +233,4 @@ if __name__ == '__main__':
         testcase.loc[idx, "Standar Deviasi Jarak ACO"] = stdDistanceACO
         testcase.loc[idx, "Standar Deviasi Jarak GA-ACO"] = stdDistanceGAACO
 
-    sys.stdout = origin_stdout
-    f.close()
     testcase.to_excel('testcase_result.xlsx', index=False)

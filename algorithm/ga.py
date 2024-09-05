@@ -34,13 +34,13 @@ def rankRoutes(population):
 
     return rankRoute
 
-def selection(population, DEBUG=False):
+def selection(population, log, DEBUG=False):
     selection = []
     #Take first 2  the best individuals
     for i in range(0,2):
         selection.append(population[i])
         if DEBUG:
-            print("seleksi ke-" + str(i+1) + " " + str(Route(selection[i]).printCity()) + "\n" +
+            log.printToLog("seleksi ke-" + str(i+1) + " " + str(Route(selection[i]).printCity()) + "\n" +
                 " Jarak = " + str(Route(selection[i]).routeDistance()) + "\n" + " Fitness = " + str(
                 Route(selection[i]).routeFitness()))
     return selection
@@ -67,7 +67,7 @@ def tabulist(selectionResults, tabulist):
 
     return isTabulist,tabulist
 
-def crossover(parent1, parent2, tab, DEBUG=False):
+def crossover(parent1, parent2, tab, log, DEBUG=False):
     childP1 = []
     childP2 = []
     child = []
@@ -88,7 +88,7 @@ def crossover(parent1, parent2, tab, DEBUG=False):
     endGene = max(geneA, geneB)
     
     if DEBUG:
-        print("stargene = "+str(startGene+1)+", endGene = "+str(endGene+1))
+        log.printToLog("stargene = "+str(startGene+1)+", endGene = "+str(endGene+1))
 
     for i in range(startGene, endGene+1):
         childP1.append(parent1[i])
@@ -110,7 +110,7 @@ def crossover(parent1, parent2, tab, DEBUG=False):
 
     return child
 
-def mutate(individual,DEBUG=False):
+def mutate(individual, log, DEBUG=False):
     #randomizes the gene number to be exchanged
     swapped = random.randint(1, len(individual)-1)
     swapWith = random.randint(1, len(individual)-1)
@@ -122,14 +122,14 @@ def mutate(individual,DEBUG=False):
     city2 = individual[swapWith]
 
     if DEBUG:
-        print("swapped = "+str(swapped+1) + " , swap with = " + str(swapWith+1))
+        log.printToLog("swapped = "+str(swapped+1) + " , swap with = " + str(swapWith+1))
 
     #hasil mutasi
     individual[swapped] = city2
     individual[swapWith] = city1
     return individual
 
-def updateGeneration(population,popsize,mutate,DEBUG=False):
+def updateGeneration(population, popsize, mutate, log, DEBUG=False):
     generasibaru =[]
     #combining populations with mutation results to create a new generation
     for i in range(0,popsize):
@@ -140,13 +140,13 @@ def updateGeneration(population,popsize,mutate,DEBUG=False):
       generasibaru[popsize-1] =mutate
     if DEBUG:
         for i in range(0,popsize):
-            print("Generasi baru ke-" + str(i+1) + " " + str(Route(generasibaru[i]).printCity()) +
+            log.printToLog("Generasi baru ke-" + str(i+1) + " " + str(Route(generasibaru[i]).printCity()) +
                 " Jarak = " + str(Route(generasibaru[i]).routeDistance()) + " Fitness = " + str(
                 Route(generasibaru[i]).routeFitness()))
 
     return generasibaru
 
-def geneticAlgorithm(population, popSize, generations, DEBUG=False, imageFilename='./images/ga_result.png'):
+def geneticAlgorithm(population, popSize, generations, log, DEBUG=False):
     tabulistResult = []
     finalPopulation = []
     pop = []
@@ -160,12 +160,12 @@ def geneticAlgorithm(population, popSize, generations, DEBUG=False, imageFilenam
         pop.append(rankPopulasi[i])
 
     # Start genetic algorithm with the first generation
-    print("=========================== GENERASI KE " + str(1) + "===============================================================>")
+    log.printToLog("=========================== GENERASI KE " + str(1) + "===============================================================>")
     for i in range(0,len(pop)):
-        print("populasi ke-" + str(i+1) + " " + str(Route(pop[i]).printCity()) +
+        log.printToLog("populasi ke-" + str(i+1) + " " + str(Route(pop[i]).printCity()) +
               " Jarak = " + str(Route(pop[i]).routeDistance()) + " Fitness = " + str(
             Route(pop[i]).routeFitness()))
-    print("==========================================================================================>")
+    log.printToLog("==========================================================================================>")
 
     bestDistance = 9999999999999
     progress =[]
@@ -173,35 +173,35 @@ def geneticAlgorithm(population, popSize, generations, DEBUG=False, imageFilenam
         nextGeneration = []
 
         #Selection process
-        selectionResults = selection(pop, DEBUG)
+        selectionResults = selection(pop, log, DEBUG)
 
         #Check Tabulist
         tab, tabulistResult = tabulist(selectionResults, tabulistResult)
 
         #Crossover if the tabulist true
-        crossoverResult = crossover(selectionResults[0], selectionResults[1], tab, DEBUG)
+        crossoverResult = crossover(selectionResults[0], selectionResults[1], tab, log, DEBUG)
         if DEBUG:
             if tab == False:
-                print("Tabulist False")
-                print("==========================================================================================>")
-                print("hasil crossover = " + str(crossoverResult))
-                print("==========================================================================================>")
+                log.printToLog("Tabulist False")
+                log.printToLog("==========================================================================================>")
+                log.printToLog("hasil crossover = " + str(crossoverResult))
+                log.printToLog("==========================================================================================>")
             elif tab == True:
-                print("Tabulist true")
-                print("==========================================================================================>")
-                print("seleksi 1 = " + str(crossoverResult))
-                print("==========================================================================================>")
-            print("TABULIST : ", tabulistResult, "\n")
+                log.printToLog("Tabulist true")
+                log.printToLog("==========================================================================================>")
+                log.printToLog("seleksi 1 = " + str(crossoverResult))
+                log.printToLog("==========================================================================================>")
+            log.printToLog("TABULIST : ", tabulistResult, "\n")
 
         #Mutate Process
-        children = mutate(crossoverResult,DEBUG)
+        children = mutate(crossoverResult, log, DEBUG)
         if DEBUG:
-            print("hasil mutasi = " + str(children) + " Jarak = " + str(Route(children).routeDistance()) + " Fitness = " + str(
+            log.printToLog("hasil mutasi = " + str(children) + " Jarak = " + str(Route(children).routeDistance()) + " Fitness = " + str(
                 Route(children).routeFitness()))
-            print("==========================================================================================>")
+            log.printToLog("==========================================================================================>")
 
         #Update Generation
-        nextGeneration = updateGeneration(pop, popSize, children, DEBUG)
+        nextGeneration = updateGeneration(pop, popSize, children, log, DEBUG)
         poptemp = nextGeneration
 
         # Sorting new generations based on fitness
@@ -221,17 +221,17 @@ def geneticAlgorithm(population, popSize, generations, DEBUG=False, imageFilenam
         # Next Generation process
         finalPopulation = pop
         if (DEBUG and i < generations-1) or (i == generations-1): 
-            print("\n====================================== GENERASI KE " + str(
+            log.printToLog("\n====================================== GENERASI KE " + str(
                 i + 2) + "======================================>")
             for n in range(0, len(pop)):
-                print("populasi ke-" + str(n+1) + " " + str(Route(pop[n]).printCity()) +
+                log.printToLog("populasi ke-" + str(n+1) + " " + str(Route(pop[n]).printCity()) +
                     " Jarak = " + str(Route(pop[n]).routeDistance()) + " Fitness = " + str(
                     Route(pop[n]).routeFitness()))
-            print("=========================================================================================>")
+            log.printToLog("=========================================================================================>")
 
 
-    print("BEST INDIVIDU = " + str(bestIndividu))
-    print("BEST DISTANCE = " + str(bestDistance))
-    print("BEST FITNESS = " + str(bestFitness))
+    log.printToLog("BEST INDIVIDU = " + str(bestIndividu))
+    log.printToLog("BEST DISTANCE = " + str(bestDistance))
+    log.printToLog("BEST FITNESS = " + str(bestFitness))
 
     return finalPopulation, bestDistance, progress
