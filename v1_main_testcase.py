@@ -57,6 +57,7 @@ testcase['Image GA-ACO All Percobaan 3'] = testcase['Image GA-ACO All Percobaan 
 if __name__ == '__main__':
     for idx in range(0,len(testcase)):
         dataset = testcase.loc[idx,"Dataset"]
+        number = testcase.loc[idx,"No."]
 
         # Algen Parameters
         populationSize = testcase.loc[idx,"Populasi"]
@@ -79,12 +80,12 @@ if __name__ == '__main__':
         for testIdx in range(1, 4):
             log.progressBar((idx*3)+testIdx, (len(testcase)*3), idx, dataset, testIdx)
 
-            GAImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_'+str(generation)+'.png'
-            ACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_ACO_'+str(generation)+'.png'
-            GAACOACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(ACO)_'+str(generation)+'.png'
-            GAACO2ImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(2 line)_'+str(generation)+'.png'
-            GAACO1ImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(1 line)_'+str(generation)+'.png'
-            GAACOAllImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_All_'+str(generation)+'.png'
+            GAImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_'+str(number)+'.png'
+            ACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_ACO_'+str(number)+'.png'
+            GAACOACOImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(ACO)_'+str(number)+'.png'
+            GAACO2ImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(2 line)_'+str(number)+'.png'
+            GAACO1ImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_(1 line)_'+str(number)+'.png'
+            GAACOAllImageFilename = './tcImages/'+dataset.replace('.csv','')+'_'+str(testIdx)+'_GA_ACO_All_'+str(number)+'.png'
 
             start_time = time.time()
             # Start Genetic Algorithm process
