@@ -23,14 +23,16 @@ def rankRoutes(population):
 
     #Determine fitness each individual in population
     for i in range(0, len(population)):
-        fitnessResults.append(Route(population[i]).routeFitness())
+        fitnessResult = {}
+        fitnessResult['route'] = population[i]
+        fitnessResult['fitness'] = Route(population[i]).routeFitness()
+        fitnessResults.append(fitnessResult)
 
     #Sorting based on fitness value
-    sortedFitness = sorted(fitnessResults, reverse=True)
+    sortedFitness = sorted(fitnessResults, key=lambda x: x['fitness'], reverse=True)
+
     for i in range(0, len(sortedFitness)):
-        for j in range(0, len(population)):
-            if sortedFitness[i] == Route(population[j]).routeFitness():
-                rankRoute[i] = population[j]
+        rankRoute[i] = sortedFitness[i]['route']
 
     return rankRoute
 
@@ -195,7 +197,7 @@ def geneticAlgorithm(population, popSize, genCriteria, log, DEBUG=False):
                 log.printToLog("==========================================================================================>")
                 log.printToLog("seleksi 1 = " + str(crossoverResult))
                 log.printToLog("==========================================================================================>")
-            log.printToLog("TABULIST : ", tabulistResult, "\n")
+            log.printToLog("TABULIST : {tab}\n".format(tab=tabulistResult))
 
         #Mutate Process
         children = mutate(crossoverResult, log, DEBUG)
