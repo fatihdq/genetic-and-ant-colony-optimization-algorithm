@@ -54,5 +54,5 @@ if __name__ == '__main__':
     plt.plot(bestDistances)
     plt.xlabel('Iteration')
     plt.ylabel('Distance')
-    plt.title('Ant Colony Optimization Result')
+    plt.title('Hybrid GA-ACO Algorithm')
     plt.savefig(imageFile)

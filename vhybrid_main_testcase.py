@@ -72,7 +72,7 @@ if __name__ == '__main__':
             plt.legend()
             plt.ylabel('Distance')
             plt.xlabel('Generation')
-            plt.title('Ant Colony Optimization Result')
+            plt.title('Hybrid GA-ACO Algorithm')
             plt.savefig(imageFilename)
             plt.close()
 
