@@ -229,17 +229,10 @@ def hybridGaAco(city, nAnts, rho, alpha, beta, initialPheromne, startTime, timeC
         crossoverResult = crossover(selectionResults[0], selectionResults[1], tab, log, DEBUG)
 
         if (DEBUG) or (idx == 0):
-            if tab == False:
-                log.printToLog("Tabulist False")
-                log.printToLog("==========================================================================================>")
-                log.printToLog("hasil crossover = " + str(crossoverResult))
-                log.printToLog("==========================================================================================>")
-            elif tab == True:
-                log.printToLog("Tabulist true")
-                log.printToLog("==========================================================================================>")
-                log.printToLog("seleksi 1 = " + str(crossoverResult))
-                log.printToLog("==========================================================================================>")
-            log.printToLog("TABULIST : {tab}\n".format(tab=tabulistResult))
+            log.printToLog("Crosover Result")
+            log.printToLog("==========================================================================================>")
+            log.printToLog("seleksi 1 = " + str(crossoverResult))
+            log.printToLog("==========================================================================================>")
 
         #Mutate Process
         children = mutate(crossoverResult, log, DEBUG)
