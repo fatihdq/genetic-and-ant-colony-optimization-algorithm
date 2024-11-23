@@ -5,6 +5,8 @@ import random
 from base.city import City
 from base.route import Route
 
+np.seterr(divide='ignore', invalid='ignore')
+
 def rankRoutes(population):
     fitnessResults = []
     rankRoute = {}
@@ -184,11 +186,7 @@ def hybridGaAco(city, nAnts, rho, alpha, beta, initialPheromne, startTime, timeC
                 vFeature = np.power(visibilityTemp[currentLocation, :], alpha)
                 features = np.multiply(pFeature, vFeature)
                 total = np.sum(features)
-                try:
-                    probabilities = features/total
-                except: 
-                    print("Warning Error while: pFeature: {}, vFeature: {}, feature: {}, total: {}".format(pFeature, vFeature, features, total))
-                    probabilities = 0
+                probabilities = features/total
                 
                 if DEBUG:
                     log.printToLog(f"Ant {i + 1}: {route}")
