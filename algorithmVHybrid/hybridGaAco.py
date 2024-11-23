@@ -184,7 +184,11 @@ def hybridGaAco(city, nAnts, rho, alpha, beta, initialPheromne, startTime, timeC
                 vFeature = np.power(visibilityTemp[currentLocation, :], alpha)
                 features = np.multiply(pFeature, vFeature)
                 total = np.sum(features)
-                probabilities = features/total
+                try:
+                    probabilities = features/total
+                except: 
+                    print("Warning Error while: pFeature: {}, vFeature: {}, feature: {}, total: {}".format(pFeature, vFeature, features, total))
+                    probabilities = 0
                 
                 if DEBUG:
                     log.printToLog(f"Ant {i + 1}: {route}")
